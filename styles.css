@@ -1,0 +1,235 @@
+/* General Body Styling */
+body {
+    background-color: rgba(18, 18, 18); /* Dark background color with increased opacity */
+    color: #ffffff; /* Light text color for contrast */
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content at the top */
+    align-items: center; /* Center content horizontally */
+    position: relative; /* Added relative positioning */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to bottom right, #4a90e2, #8a3ab9); /* Blue to purple gradient */
+    z-index: -2; /* Behind the background */
+    opacity: 0.075; /* Adjusted opacity to make gradient barely visible */
+    background-size: 200% 200%; /* Make the background larger to allow for movement */
+    animation: gradient-animation 3s ease infinite; /* Apply the animation */
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+header {
+    color: #fff;
+    padding: 20px;
+    letter-spacing: 1vh;
+    text-align: center;
+}
+
+#streak-section {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#streak-count {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+#workout-complete {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#workout-complete[disabled] {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+#workout-complete:hover:not([disabled]) {
+    background-color: #218838;
+}
+
+main {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#goals-section h2 {
+    margin-bottom: 10px;
+}
+
+#goals-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#goals-list li {
+    margin-bottom: 10px;
+}
+
+.goal-checkbox {
+    margin-right: 10px;
+}
+
+.goal-actions {
+    margin-left: 10px;
+    font-size: 0.9em;
+}
+
+.goal-actions button {
+    margin-left: 5px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 3px 8px;
+    cursor: pointer;
+}
+
+.goal-actions button.edit {
+    background-color: #007bff;
+}
+
+#add-goal {
+    font-family: Arial, sans-serif;
+    font-style: bold;
+    font-size: 14px;
+    padding: 0.6em 2em;
+    border: none;
+    outline: none;
+    color: #000;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+}
+  
+#add-goal:before {
+    content: "";
+    background: linear-gradient(
+      45deg,
+      #ff0000,
+      #ff7300,
+      #fffb00,
+      #48ff00,
+      #00ffd5,
+      #002bff,
+      #7a00ff,
+      #ff00c8,
+      #ff0000
+    );
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowingbn5 20s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 10px;
+}
+  
+@keyframes glowingbn5 {
+    0% {
+      background-position: 0 0;
+    }
+    50% {
+      background-position: 400% 0;
+    }
+    100% {
+      background-position: 0 0;
+    }
+}
+  
+#add-goal:active {
+    color: #fff;
+}
+  
+#add-goal:active:after {
+    background: transparent;
+}
+  
+#add-goal:hover:before {
+    opacity: 1;
+}
+  
+#add-goal:after {
+    z-index: -1;
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+#reset-streak {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#reset-streak:hover {
+    background-color: #c82333;
+}
+
+.footer-link {
+    font-size: 1rem; /* Adjusted font size */
+    color: #ffffff; /* Default color */
+    margin-bottom: 15px; /* Adjusted margin */
+    text-decoration: none;
+    -webkit-text-fill-color: #ffffff; /* Ensure text color is white */
+}
+
+.footer-link:hover {
+    background: linear-gradient(to bottom right, #4a90e2, #8a3ab9); /* Define your gradient colors */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%; /* Make the background larger to allow for movement */
+    animation: gradient-animation 3s ease infinite; /* Apply the animation */
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
