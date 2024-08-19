@@ -6,37 +6,8 @@
     <title>TRACKR</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="TRACKR.png" type="image/x-icon">
-
-    <!-- Supabase JS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.min.js"></script>
-
-    <script>
-        // Supabase configuration
-        const SUPABASE_URL = 'https://ghkjfnbnvvyjnlxrakeu.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdoa2pmbmJudnZ5am5seHJha2V1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQwOTMxNTcsImV4cCI6MjAzOTY2OTE1N30._756MkgAcju4eE_eCskXP7exbHGw17FPqxkzhYb79x8';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        document.addEventListener('DOMContentLoaded', async function() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                // User is signed in, hide the signup link
-                document.getElementById('signup-link').style.display = 'none';
-                // Update Account link to go to account page
-                document.getElementById('account-link').href = 'account.html';
-            } else {
-                // Update Account link to go to login page
-                document.getElementById('account-link').href = 'login.html';
-            }
-        });
-    </script>
 </head>
 <body>
-    <nav class="navbar">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="login.html" class="nav-link" id="account-link">Account</a>
-        <a href="about.html" class="nav-link">About</a>
-        <a href="contact.html" class="nav-link">Contact</a>
-    </nav>
     <header>
         <h1>TRACKR</h1>
     </header>
@@ -44,11 +15,7 @@
     <div id="streak-section">
         <p>Current Streak: <span id="streak-count">0</span> days</p>
         <div id="timer-display">24:00:00</div>
-        <button id="workout-complete">Completed</button>
-        <div>
-            <br>
-            <a class="footer-link" href="signup.html" id="signup-link">Sign up for reminders</a>
-        </div>        
+        <button id="workout-complete">Completed</button>       
     </div>
     
     <main>
