@@ -1,19 +1,20 @@
-document.getElementById('login-form').addEventListener('submit', function (e) {
-    e.preventDefault();
+// Import Supabase client library
+import { createClient } from '@supabase/supabase-js';
 
+// Initialize Supabase
+const supabase = createClient('https://ghkjfnbnvvyjnlxrakeu.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdoa2pmbmJudnZ5am5seHJha2V1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQwOTMxNTcsImV4cCI6MjAzOTY2OTE1N30._756MkgAcju4eE_eCskXP7exbHGw17FPqxkzhYb79x8');
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
-    firebase.auth().signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            alert('Login successful');
-            window.location.href = 'index.html'; // Redirect to homepage
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            alert(errorMessage);
-        });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+        console.error(error.message);
+    } else {
+        localStorage.setItem('loggedIn', 'true');
+        window.location.href = 'index.html'; // Redirect to homepage
+    }
 });

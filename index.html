@@ -7,26 +7,18 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="TRACKR.png" type="image/x-icon">
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.min.js"></script>
 
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAvEpq0nQIP7H9RyOfkj4k0KJsttrPp6nI",
-            authDomain: "trackr-343f2.firebaseapp.com",
-            projectId: "trackr-343f2",
-            storageBucket: "trackr-343f2.appspot.com",
-            messagingSenderId: "272121586852",
-            appId: "1:272121586852:web:7a1d64e8c86545b8697231"
-        };
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        // Supabase configuration
+        const SUPABASE_URL = 'https://ghkjfnbnvvyjnlxrakeu.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdoa2pmbmJudnZ5am5seHJha2V1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQwOTMxNTcsImV4cCI6MjAzOTY2OTE1N30._756MkgAcju4eE_eCskXP7exbHGw17FPqxkzhYb79x8';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Check login status
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
+        document.addEventListener('DOMContentLoaded', async function() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
                 // User is signed in, hide the signup link
                 document.getElementById('signup-link').style.display = 'none';
                 // Update Account link to go to account page
