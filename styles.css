@@ -57,13 +57,16 @@ header {
     font-size: 1.5em;
 }
 
-#workout-complete {
+#workout-complete, #reset-streak {
     margin-top: 10px;
     padding: 10px 20px;
-    background-color: #28a745;
     color: white;
     border: none;
     cursor: pointer;
+}
+
+#workout-complete {
+    background-color: #28a745;
 }
 
 #workout-complete[disabled] {
@@ -75,10 +78,19 @@ header {
     background-color: #218838;
 }
 
+#reset-streak {
+    background-color: #dc3545;
+}
+
+#reset-streak:hover {
+    background-color: #c82333;
+}
+
 main {
     padding: 20px;
     max-width: 600px;
     margin: 0 auto;
+    text-align: center;
 }
 
 #goals-section h2 {
@@ -193,18 +205,6 @@ main {
     top: 0;
     border-radius: 10px;
 }
-#reset-streak {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-#reset-streak:hover {
-    background-color: #c82333;
-}
 
 .footer-link {
     font-size: 1rem; /* Adjusted font size */
@@ -222,14 +222,21 @@ main {
     animation: gradient-animation 3s ease infinite; /* Apply the animation */
 }
 
-@keyframes gradient-animation {
-    0% {
-        background-position: 0% 0%;
-    }
-    50% {
-        background-position: 100% 100%;
-    }
-    100% {
-        background-position: 0% 0%;
-    }
+#reminder-section {
+    margin-top: 15px;
+    text-align: center;
+}
+
+#email-address {
+    margin-left: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    width: 60%;
+}
+
+#email-address:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
 }

@@ -3,117 +3,168 @@ document.addEventListener('DOMContentLoaded', () => {
     const workoutCompleteButton = document.getElementById('workout-complete');
     const addGoalButton = document.getElementById('add-goal');
     const goalsList = document.getElementById('goals-list');
+    const getRemindedCheckbox = document.getElementById('get-reminded');
+    const emailInput = document.getElementById('email-address');
+    const timerDisplay = document.getElementById('timer-display');
+    const testModeCheckbox = document.getElementById('test-mode');
 
     let streak = parseInt(localStorage.getItem('streak')) || 0;
     let lastWorkoutDate = localStorage.getItem('lastWorkoutDate');
     let goals = JSON.parse(localStorage.getItem('goals')) || [];
+    let buttonDisabled = localStorage.getItem('buttonDisabled') === 'true';
+    let countdownSeconds;
+    let timerInterval;
 
-    // Function to update streak display
-    const updateStreak = () => {
-        streakCountElement.textContent = streak;
-        localStorage.setItem('streak', streak);
-    };
+   // Function to update streak display
+   const updateStreak = () => {
+    streakCountElement.textContent = streak;
+    localStorage.setItem('streak', streak);
+};
 
-    // Function to render goals
-    const renderGoals = () => {
-        goalsList.innerHTML = '';
-        goals.forEach((goal, index) => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `
-                <input type="checkbox" class="goal-checkbox" data-index="${index}" ${goal.completed ? 'checked' : ''}>
-                ${goal.text}
-                <div class="goal-actions">
-                    <button class="edit" data-index="${index}">Edit</button>
-                    <button class="remove" data-index="${index}">Remove</button>
-                </div>
-            `;
-            goalsList.appendChild(listItem);
-        });
-        localStorage.setItem('goals', JSON.stringify(goals));
-    };
+// Function to render goals
+const renderGoals = () => {
+    goalsList.innerHTML = '';
 
-    // Function to reset checkboxes
-    const resetCheckboxes = () => {
-        goals.forEach(goal => goal.completed = false);
-        renderGoals();
-    };
-
-    // Event listener for workout complete button
-    workoutCompleteButton.addEventListener('click', () => {
-        if (new Date().toDateString() !== lastWorkoutDate) {
-            streak++;
-            lastWorkoutDate = new Date().toDateString();
-            localStorage.setItem('lastWorkoutDate', lastWorkoutDate);
-            updateStreak();
-            resetCheckboxes();
-            workoutCompleteButton.disabled = true;
-        }
+    goals.forEach((goal, index) => {
+        const li = document.createElement('li');
+        li.classList.add('goal-item');
+        li.innerHTML = `
+            <input type="checkbox" class="goal-checkbox" data-index="${index}" ${goal.completed ? 'checked' : ''}>
+            <span class="goal-text">${goal.text}</span>
+            <span class="goal-actions">
+                <button class="edit" data-index="${index}">Edit</button>
+                <button class="delete" data-index="${index}">Delete</button>
+            </span>
+        `;
+        goalsList.appendChild(li);
     });
+};
 
-    // Disable the button if already pressed today
-    if (new Date().toDateString() === lastWorkoutDate) {
-        workoutCompleteButton.disabled = true;
-    }
+// Load goals from localStorage
+renderGoals();
 
-    // Midnight reset for workout button
-    const resetStreakAtMidnight = () => {
+// Check if the last workout date is today
+const isToday = (date) => {
+    const today = new Date().toISOString().split('T')[0];
+    return date === today;
+};
+
+// Update streak display on page load
+updateStreak();
+
+    // Function to update timer display
+    const updateTimerDisplay = () => {
+        if (timerDisplay) {
+            const hoursLeft = Math.floor(countdownSeconds / 3600);
+            const minutesLeft = Math.floor((countdownSeconds % 3600) / 60);
+            const secondsLeft = countdownSeconds % 60;
+            timerDisplay.textContent = `${String(hoursLeft).padStart(2, '0')}:${String(minutesLeft).padStart(2, '0')}:${String(secondsLeft).padStart(2, '0')}`;
+        }
+    };
+
+    // Calculate remaining time until midnight
+    const calculateCountdownSeconds = () => {
         const now = new Date();
-        const millisUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0) - now;
-
-        setTimeout(() => {
-            workoutCompleteButton.disabled = false;
-            resetStreakAtMidnight();
-        }, millisUntilMidnight);
+        const nextReset = new Date();
+        nextReset.setHours(24, 0, 0, 0); // Midnight of the next day
+        return Math.floor((nextReset - now) / 1000);
     };
 
-    resetStreakAtMidnight();
+    // Countdown Timer Functionality
+    const countdown = () => {
+        if (countdownSeconds <= 0) {
+            clearInterval(timerInterval); // Stop the timer
+            workoutCompleteButton.disabled = false; // Re-enable the button
+            localStorage.setItem('buttonDisabled', 'false');
+            countdownSeconds = testModeCheckbox.checked ? 10 : calculateCountdownSeconds(); // Reset countdown
+            localStorage.setItem('countdownSeconds', countdownSeconds);
+        }
+        countdownSeconds--;
+        updateTimerDisplay();
+    };
 
-    // Function to add a new goal
+    // Start countdown
+    const startCountdown = () => {
+        clearInterval(timerInterval);
+        countdownSeconds = calculateCountdownSeconds();
+        updateTimerDisplay();
+        timerInterval = setInterval(countdown, 1000);
+    };
+
+    // Initial setup
+    updateTimerDisplay();
+    startCountdown();
+
+    // Disable workout complete button if not in test mode and not allowed
+    workoutCompleteButton.disabled = buttonDisabled;
+
+    // Add event listener for workout complete button
+    workoutCompleteButton.addEventListener('click', () => {
+        if (!workoutCompleteButton.disabled) {
+            streak++;
+            updateStreak();
+            localStorage.setItem('lastWorkoutDate', new Date().toISOString().split('T')[0]);
+            workoutCompleteButton.disabled = true; // Disable button until next cycle
+            localStorage.setItem('buttonDisabled', 'true');
+
+            // Reset all goals
+            goals.forEach((goal) => {
+                goal.completed = false;
+            });
+            localStorage.setItem('goals', JSON.stringify(goals));
+            renderGoals();
+
+            // Restart the countdown
+            countdownSeconds = testModeCheckbox.checked ? 10 : calculateCountdownSeconds(); // Set countdown based on test mode
+            localStorage.setItem('countdownSeconds', countdownSeconds);
+            startCountdown();
+        }
+    });
+
+    // Add event listener for add goal button
     addGoalButton.addEventListener('click', () => {
-        const newGoalText = prompt("Enter your new goal:");
-        if (newGoalText) {
-            goals.push({ text: newGoalText, completed: false });
+        const goalText = prompt('Enter your goal:');
+        if (goalText) {
+            goals.push({ text: goalText, completed: false });
+            localStorage.setItem('goals', JSON.stringify(goals));
             renderGoals();
         }
     });
 
-    // Event delegation for edit and remove buttons
+    // Add event listener for goals list (delegation)
     goalsList.addEventListener('click', (e) => {
-        const index = e.target.dataset.index;
-        if (e.target.classList.contains('remove')) {
-            goals.splice(index, 1);
-            renderGoals();
-        } else if (e.target.classList.contains('edit')) {
-            const newGoalText = prompt("Edit your goal:", goals[index].text);
-            if (newGoalText) {
+        const target = e.target;
+        const index = target.getAttribute('data-index');
+
+        if (target.classList.contains('goal-checkbox')) {
+            goals[index].completed = target.checked;
+            localStorage.setItem('goals', JSON.stringify(goals));
+        }
+
+        if (target.classList.contains('edit')) {
+            const newGoalText = prompt('Edit your goal:', goals[index].text);
+            if (newGoalText !== null) {
                 goals[index].text = newGoalText;
+                localStorage.setItem('goals', JSON.stringify(goals));
                 renderGoals();
             }
         }
-    });
 
-    // Event delegation for checkboxes
-    goalsList.addEventListener('change', (e) => {
-        if (e.target.classList.contains('goal-checkbox')) {
-            const index = e.target.dataset.index;
-            goals[index].completed = e.target.checked;
+        if (target.classList.contains('delete')) {
+            goals.splice(index, 1);
             localStorage.setItem('goals', JSON.stringify(goals));
+            renderGoals();
         }
     });
 
-    // Initialize streak and goals display
-    updateStreak();
-    renderGoals();
-});
-
-// Event listener for reset streak button
-const resetStreakButton = document.getElementById('reset-streak');
-
-resetStreakButton.addEventListener('click', () => {
-    streak = 0;
-    localStorage.setItem('streak', streak);
-    localStorage.removeItem('lastWorkoutDate');
-    updateStreak();
-    workoutCompleteButton.disabled = false; // Re-enable the Workout Completed button
-    location.reload(); // Automatically refresh the page
+    // Reminder section handling
+    getRemindedCheckbox.addEventListener('change', () => {
+        if (getRemindedCheckbox.checked) {
+            emailInput.disabled = false;
+        } else {
+            emailInput.disabled = true;
+            emailInput.value = '';
+        }
+    });
+    
 });
