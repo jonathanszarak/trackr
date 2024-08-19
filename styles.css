@@ -240,3 +240,170 @@ main {
     background-color: #e9ecef;
     cursor: not-allowed;
 }
+
+.container {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin: 0 auto; /* Center the container horizontally */
+}
+
+/* Style for the form heading */
+h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Style for each input group (label and input field) */
+.input-group {
+    margin-bottom: 1rem;
+}
+
+/* Style for the labels */
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* Style for the input fields */
+.input-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Style for the submit button */
+button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+/* Style for the paragraph text */
+p {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Style for the links */
+p a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 2rem;
+}
+
+.nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    margin: 0 1rem;
+    font-size: 1rem;
+    -webkit-text-fill-color: #ffffff;
+    transition: background 0.3s ease;
+}
+
+.nav-link:hover {
+    background: linear-gradient(to bottom right, #4a90e2, #8a3ab9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: gradient-animation 3s ease infinite;
+}
+
+.glowing-button {
+    font-family: Arial, sans-serif;
+    font-style: bold;
+    font-size: 14px;
+    padding: 0.6em 2em;
+    border: none;
+    outline: none;
+    color: #000;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+    width: 100%; /* Ensure the button spans the width of the container */
+}
+
+.glowing-button:before {
+    content: "";
+    background: linear-gradient(
+      45deg,
+      #ff0000,
+      #ff7300,
+      #fffb00,
+      #48ff00,
+      #00ffd5,
+      #002bff,
+      #7a00ff,
+      #ff00c8,
+      #ff0000
+    );
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowingbn5 20s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 10px;
+}
+
+.glowing-button:active {
+    color: #fff;
+}
+
+.glowing-button:active:after {
+    background: transparent;
+}
+
+.glowing-button:hover:before {
+    opacity: 1;
+}
+
+.glowing-button:after {
+    z-index: -1;
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+.full-width-input {
+    width: 100%;
+    padding: 0.5em;
+    box-sizing: border-box; /* Ensures padding doesn't affect the width */
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
