@@ -15,50 +15,42 @@ document.addEventListener('DOMContentLoaded', () => {
     let countdownSeconds;
     let timerInterval;
 
-    // Function to update streak display
-    const updateStreak = () => {
-        streakCountElement.textContent = streak;
-        localStorage.setItem('streak', streak);
-    };
+   // Function to update streak display
+   const updateStreak = () => {
+    streakCountElement.textContent = streak;
+    localStorage.setItem('streak', streak);
+};
 
-    // Function to render goals
-    const renderGoals = () => {
-        goalsList.innerHTML = '';
+// Function to render goals
+const renderGoals = () => {
+    goalsList.innerHTML = '';
 
-        goals.forEach((goal, index) => {
-            const li = document.createElement('li');
-            li.classList.add('goal-item');
-            li.innerHTML = `
-                <input type="checkbox" class="goal-checkbox" data-index="${index}" ${goal.completed ? 'checked' : ''}>
-                <span class="goal-text">${goal.text}</span>
-                <span class="goal-actions">
-                    <button class="edit" data-index="${index}">Edit</button>
-                    <button class="delete" data-index="${index}">Delete</button>
-                </span>
-            `;
-            goalsList.appendChild(li);
-        });
+    goals.forEach((goal, index) => {
+        const li = document.createElement('li');
+        li.classList.add('goal-item');
+        li.innerHTML = `
+            <input type="checkbox" class="goal-checkbox" data-index="${index}" ${goal.completed ? 'checked' : ''}>
+            <span class="goal-text">${goal.text}</span>
+            <span class="goal-actions">
+                <button class="edit" data-index="${index}">Edit</button>
+                <button class="delete" data-index="${index}">Delete</button>
+            </span>
+        `;
+        goalsList.appendChild(li);
+    });
+};
 
-        checkCompleteButtonState();
-    };
+// Load goals from localStorage
+renderGoals();
 
-    // Function to check if all goals are completed and enable/disable workoutCompleteButton accordingly
-    const checkCompleteButtonState = () => {
-        const allGoalsCompleted = goals.length > 0 && goals.every(goal => goal.completed);
-        workoutCompleteButton.disabled = !allGoalsCompleted;
-    };
+// Check if the last workout date is today
+const isToday = (date) => {
+    const today = new Date().toISOString().split('T')[0];
+    return date === today;
+};
 
-    // Load goals from localStorage
-    renderGoals();
-
-    // Check if the last workout date is today
-    const isToday = (date) => {
-        const today = new Date().toISOString().split('T')[0];
-        return date === today;
-    };
-
-    // Update streak display on page load
-    updateStreak();
+// Update streak display on page load
+updateStreak();
 
     // Function to update timer display
     const updateTimerDisplay = () => {
@@ -104,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startCountdown();
 
     // Disable workout complete button if not in test mode and not allowed
-    workoutCompleteButton.disabled = buttonDisabled || !goals.length;
+    workoutCompleteButton.disabled = buttonDisabled;
 
     // Add event listener for workout complete button
     workoutCompleteButton.addEventListener('click', () => {
@@ -136,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
             goals.push({ text: goalText, completed: false });
             localStorage.setItem('goals', JSON.stringify(goals));
             renderGoals();
-            checkCompleteButtonState(); // Re-check button state after adding a goal
         }
     });
 
@@ -148,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (target.classList.contains('goal-checkbox')) {
             goals[index].completed = target.checked;
             localStorage.setItem('goals', JSON.stringify(goals));
-            checkCompleteButtonState(); // Re-check button state after goal status changes
         }
 
         if (target.classList.contains('edit')) {
@@ -164,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
             goals.splice(index, 1);
             localStorage.setItem('goals', JSON.stringify(goals));
             renderGoals();
-            checkCompleteButtonState(); // Re-check button state after deleting a goal
         }
     });
 
@@ -177,4 +166,5 @@ document.addEventListener('DOMContentLoaded', () => {
             emailInput.value = '';
         }
     });
+    
 });
